@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Full Time Scores - Non League Network</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Trebuchet MS', sans-serif;
+      background: linear-gradient(to right, #00aaff 50%, #ffed00 50%);
+      color: white;
+      font-weight: bold;
+      font-size: 20px;
+      overflow-x: hidden;
+    }
+
+    header {
+      background-color: #002b85;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 32px;
+      color: white;
+    }
+
+    .scores-container {
+      margin: 40px auto;
+      background-color: #002b85;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 700px;
+      padding: 20px;
+    }
+
+    .scores-container h2 {
+      text-align: center;
+      color: white;
+      font-size: 28px;
+      margin-top: 0;
+      text-decoration: underline;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    tr {
+      display: flex;
+      justify-content: flex-start;
+      margin-bottom: 8px; /* Added spacing */
+    }
+
+    td {
+      white-space: nowrap;
+    }
+
+    td.home {
+      text-align: right;
+      flex: 1;
+      padding-right: 8px;
+    }
+
+    td.vs {
+      text-align: left;
+      flex: 0 0 auto;
+      min-width: 15px;
+      padding-left: 0;
+    }
+
+    td.score {
+      text-align: center;
+      flex: 0 0 auto;
+      min-width: 50px;
+      padding: 0 5px;
+      background-color: #ffd900;
+      color: #002b85;
+      border-radius: 6px;
+    }
+
+    td.away {
+      text-align: left;
+      flex: 1;
+      padding-left: 8px;
+    }
+
+    .time-row {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      padding: 10px 0 4px;
+    }
+
+    .time-cell {
+      font-size: 18px;
+      font-weight: bold;
+      color: white;
+      text-align: center;
+      background-color: #0040a0;
+      padding: 6px 12px;
+      border-radius: 8px;
+    }
+
+    footer {
+      text-align: center;
+      color: #002b85;
+      font-weight: bold;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Non League Network</h1>
+</header>
+
+<div class="scores-container">
+  <h2>Full Time Scores</h2>
+
+  <pre id="matches" style="display:none;">
+East Thurrock CFC 1-5 Romford
+AFC Newbiggin 0-1 North Shields
+AFC Whyteleafe 2-2 Chislehurst Glebe
+Ashford Town (Middx) 0-4 Farnborough
+Athletic Newham 1-2 Tilbury
+Banstead Athletic 1-6 Sheerwater
+Belper United 1-1 Belper Town
+Brentwood Town 0-0 Chelmsford City
+Buckhurst Hill 3-0 Hoddesdon Town
+Canvey Island 1-2 Braintree Town
+Chasetown 4-2 Brocton
+Club Thorne Colliery 0-1 Gainsborough Trinity
+Consett AFC 1-0 Crook Town
+Dunston 3-2 Birtley Town
+Eccleshall 3-3 Congleton Town
+Erith & Belvedere 6-2 Lewisham Borough
+Erith Town 3-0 Sutton Athletic
+Faversham Town 1-3 Bromley
+FC Elmstead 0-2 Holmesdale
+Garforth Town 1-0 York City
+Golcar United 0-2 Nostell Miners Welfare
+Guiseley 0-1 Harrogate Town
+Hanwell Town 2-1 Egham Town
+Holmer Green 4-3 Winslow United
+Hornchurch 3-2 Sittingbourne
+Hungerford Town 4-0 Harrow Borough
+Hythe Town 0-4 Deal Town
+Ipswich Wanderers 0-3 Stanway Rovers
+Irlam Town 2-3 Mossley
+Louth Town 1-2 Boston Town
+Lydd Town 0-4 Kennington
+Newcastle Blue Star 3-2 Middlesbrough U23
+Punjab United 4-3 Ebbsfleet United
+Quorn 1-1 Tamworth
+Ramsgate 4-0 Faversham Strike Force
+Richmond Town 0-1 West Auckland Town
+Rossington Main 2-2 North Ferriby
+Sherwood Colliery 6-2 Retford FC
+Stafford Town 2-3 Coleshill Town
+Tow Law Town 0-1 Blyth Spartans
+Washington 0-0 Chester-le-Street Town
+Westfield 2-0 Knaphill
+  </pre>
+
+  <table id="matchTable"></table>
+</div>
+
+<footer>
+  Powered by Non League Network
+</footer>
+
+<script>
+  const rawText = document.getElementById('matches').textContent.trim();
+  const lines = rawText.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+  const table = document.getElementById('matchTable');
+  table.innerHTML = '';
+
+  const scorePattern = /(.{1})-(.{1})/;
+
+  lines.forEach(line => {
+    const scoreMatch = line.match(scorePattern);
+    if (scoreMatch) {
+      const parts = line.split(scorePattern);
+      const homeTeam = parts[0].trim();
+      const homeScore = parts[1];
+      const awayScore = parts[2];
+      const awayTeam = parts[3].trim();
+
+      const row = document.createElement('tr');
+
+      const tdHome = document.createElement('td');
+      tdHome.className = 'home';
+      tdHome.textContent = homeTeam;
+
+      const tdScore = document.createElement('td');
+      tdScore.className = 'score';
+      tdScore.textContent = `${homeScore}-${awayScore}`;
+
+      const tdAway = document.createElement('td');
+      tdAway.className = 'away';
+      tdAway.textContent = awayTeam;
+
+      row.appendChild(tdHome);
+      row.appendChild(tdScore);
+      row.appendChild(tdAway);
+
+      table.appendChild(row);
+    }
+  });
+</script>
+
+</body>
+</html>
